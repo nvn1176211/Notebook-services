@@ -20,6 +20,19 @@ class TokenController extends Controller
                 'email' => ['The provided credentials are incorrect.'],
             ]);
         }
-        return $user->createToken($request->email)->plainTextToken;
+        $plainTextToken = self::__create($user);
+        return ['token' => $plainTextToken];
+    }
+
+
+    /**
+     * @param String $tokenName
+     * @param User $user
+     * @return String
+     */ 
+    public static function __create(User $user, $tokenName = null){
+        if(empty($tokenName)) $tokenName = $user->email;
+        $token = $user->createToken($tokenName);
+        return $token->plainTextToken;
     }
 }

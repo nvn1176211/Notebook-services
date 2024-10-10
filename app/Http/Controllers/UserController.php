@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Requests\StoreUserRequest;
 use App\Models\User;
+use App\Http\Controllers\TokenController;
 
 class UserController extends Controller
 {
@@ -29,7 +30,15 @@ class UserController extends Controller
         $user->email = $email;
         $user->password = $password;
         $user->save();
-        return $user;
+        $plainTextToken = TokenController::__create($user);
+        return [
+            "name" => $user->name,
+            "email" => $user->email,
+            "updated_at" => $user->updated_at,
+            "created_at" => $user->created_at,
+            "id" => $user->id,
+            "token" => $plainTextToken
+        ];
     }
 
     /**
